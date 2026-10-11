@@ -1,0 +1,14 @@
+# YOLO11-seg dataset config — car damage (6 classes)
+# prepare_cardd.py chalane ke baad ye folders ban jate hain.
+path: ../datasets/car_damage
+train: images/train
+val: images/val
+test: images/test
+
+names:
+  0: scratch
+  1: dent
+  2: crack
+  3: broken_lamp
+  4: glass_shatter
+  5: flat_tire

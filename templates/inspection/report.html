@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}{{ inspection.report_number }} · Inspection report{% endblock %}
+{% block content %}
+<div class="report">
+  <div class="report-actions no-print">
+    <a class="btn btn-ghost btn-sm" href="{% url 'inspection:home' %}">← All inspections</a>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost btn-sm" onclick="window.print()">Print</button>
+    <a class="btn btn-primary btn-sm" href="{% url 'inspection:report_pdf' inspection.pk %}">Download PDF</a>
+    <form method="post" action="{% url 'inspection:delete' inspection.pk %}"
+          onsubmit="return confirm('Yeh inspection delete karni hai?');">
+      {% csrf_token %}
+      <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+    </form>
+  </div>
+
+  <header class="report-head">
+    <div>
+      <p class="eyebrow">Vehicle Inspection Report</p>
+      <h1>{{ inspection.vehicle }}</h1>
+      <p class="muted mono">{{ inspection.report_number }} · {{ inspection.created_at|date:"d M Y, h:i A" }}</p>
+    </div>
+    <div class="verdict status-{{ inspection.overall_status }}">
+      <small>Overall result</small>
+      <strong>{{ inspection.get_overall_status_display }}</strong>
+    </div>
+  </header>
+
+  <dl class="facts">
+    <div><dt>Plate no.</dt><dd>{{ inspection.plate_number }}</dd></div>
+    <div><dt>Customer</dt><dd>{{ inspection.customer_name }}</dd></div>
+    <div><dt>Inspector</dt><dd>{{ inspection.inspector_name|default:"—" }}</dd></div>
+    <div><dt>Rental period</dt><dd>{{ inspection.rental_start|date:"d M Y"|default:"—" }} → {{ inspection.rental_end|date:"d M Y"|default:"—" }}</dd></div>
+  </dl>
+
+  <section class="card">
+    <div class="card-head"><h2>AI findings</h2></div>
+    <ul class="findings">
+      {% for z in inspection.zones.all %}
+      <li>
+        <span class="dot status-{{ z.status }}"></span>
+        <strong>{{ z.get_zone_display }}</strong>
+        <span class="finding-text">— {{ z.get_status_display }}
+          {% for d in z.new_detections %}<span class="finding-damage">{{ d.get_label_display }}{% if d.part %} · {{ d.part }}{% endif %}</span>{% endfor %}
+        </span>
+        <span class="muted mono">{{ z.change_percent|floatformat:2 }}% changed</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% if inspection.notes %}<p class="notes"><strong>Notes:</strong> {{ inspection.notes }}</p>{% endif %}
+  </section>
+
+  {% for z in inspection.zones.all %}
+  <section class="card zone-result">
+    <div class="card-head">
+      <h2>{{ z.get_zone_display }}</h2>
+      <span class="badge status-{{ z.status }}">{{ z.get_status_display }}</span>
+    </div>
+    <div class="compare">
+      <figure>
+        <img src="{{ z.before_image.url }}" alt="{{ z.get_zone_display }} before rental">
+        <figcaption>Before rental</figcaption>
+      </figure>
+      <figure>
+        {% if z.annotated_image %}
+          <img src="{{ z.annotated_image.url }}" alt="{{ z.get_zone_display }} after rental, AI marked">
+        {% else %}
+          <img src="{{ z.after_image.url }}" alt="{{ z.get_zone_display }} after rental">
+        {% endif %}
+        <figcaption>After rental <span class="muted">· changes marked in red</span></figcaption>
+      </figure>
+    </div>
+    <div class="metrics">
+      <div><small>Changed area</small><b>{{ z.change_percent|floatformat:2 }}%</b></div>
+      <div><small>Regions flagged</small><b>{{ z.regions }}</b></div>
+      <div><small>Photo similarity</small><b>{{ z.similarity|floatformat:0 }}%</b></div>
+      <div><small>Auto-alignment</small><b>{% if z.aligned %}OK{% else %}Failed{% endif %}</b></div>
+    </div>
+    {% if z.detector %}
+    <div class="detections">
+      <h3>Damage detected <span class="muted">· {{ z.detector }}</span></h3>
+      {% with dets=z.detections.all %}
+      {% if dets %}
+      <table>
+        <thead><tr><th>Type</th><th>Location (approx.)</th><th>Confidence</th><th>Box (x1, y1, x2, y2)</th><th>Area</th><th></th></tr></thead>
+        <tbody>
+          {% for d in dets %}
+          <tr{% if not d.is_new %} class="muted"{% endif %}>
+            <td><strong>{{ d.get_label_display }}</strong></td>
+            <td>{{ d.part|default:"—" }}</td>
+            <td class="mono">{% widthratio d.confidence 1 100 %}%</td>
+            <td class="mono">{{ d.x1 }}, {{ d.y1 }}, {{ d.x2 }}, {{ d.y2 }}</td>
+            <td class="mono">{{ d.area_percent|floatformat:2 }}%</td>
+            <td>{% if d.is_new %}<span class="badge status-damage">New</span>{% else %}<span class="badge status-unclear">Already in before photo</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="muted">No scratch, dent, crack, broken lamp, glass shatter or flat tire found.</p>
+      {% endif %}
+      {% endwith %}
+    </div>
+    {% endif %}
+  </section>
+  {% endfor %}
+
+  <p class="disclaimer">This report was generated by an AI-assisted inspection tool. It highlights
+    <em>potential</em> changes between photos and must be confirmed by a staff member. It is not a
+    legal or insurance-grade assessment.</p>
+
+  <div class="signatures">
+    <div>Staff signature</div>
+    <div>Customer signature</div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+<!-- Animated car line-art: pehle draw hoti hai, phir AI scan beam guzarti hai -->
+<svg class="hero-car" viewBox="40 56 740 250" role="img" aria-label="Car being scanned by AI inspection">
+  <defs>
+    <linearGradient id="beamGrad" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#ead7a8" stop-opacity="0"/>
+      <stop offset=".75" stop-color="#ead7a8" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#fff3d6" stop-opacity=".9"/>
+    </linearGradient>
+    <radialGradient id="floorGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#c9a96e" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#c9a96e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bodyFill" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#c9a96e" stop-opacity=".10"/>
+      <stop offset="1" stop-color="#c9a96e" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- floor -->
+  <ellipse class="floor-glow" cx="410" cy="272" rx="380" ry="26" fill="url(#floorGlow)"/>
+  <line class="draw d0" pathLength="1" x1="20" y1="272" x2="800" y2="272" stroke-opacity=".35"/>
+
+  <!-- body -->
+  <path class="body-fill" d="M70 222 L62 204 C58 186 70 172 94 166 L214 147 C262 141 292 132 324 118 C364 98 404 84 456 82 L548 84 C594 86 634 106 664 129 C694 141 724 147 742 153 C754 158 758 174 756 192 L750 220 L672 222 A60 60 0 0 0 552 222 L250 222 A60 60 0 0 0 130 222 Z" fill="url(#bodyFill)" stroke="none"/>
+  <path class="draw d1" pathLength="1" d="M70 222 L62 204 C58 186 70 172 94 166 L214 147 C262 141 292 132 324 118 C364 98 404 84 456 82 L548 84 C594 86 634 106 664 129 C694 141 724 147 742 153 C754 158 758 174 756 192 L750 220 L672 222 A60 60 0 0 0 552 222 L250 222 A60 60 0 0 0 130 222 Z"/>
+
+  <!-- windows -->
+  <path class="draw d2" pathLength="1" d="M338 124 C372 103 408 93 452 91 L474 91 L480 130 L344 132 Z"/>
+  <path class="draw d2" pathLength="1" d="M492 91 L546 92 C582 94 612 109 636 128 L496 130 Z"/>
+
+  <!-- character line, doors, handles, mirror -->
+  <path class="draw d3" pathLength="1" d="M96 178 C300 166 520 164 748 170" stroke-opacity=".7"/>
+  <path class="draw d3" pathLength="1" d="M342 134 C344 160 346 186 348 214"/>
+  <path class="draw d3" pathLength="1" d="M486 132 C487 160 488 188 489 214"/>
+  <path class="draw d3" pathLength="1" d="M402 152 L428 151"/>
+  <path class="draw d3" pathLength="1" d="M540 151 L566 150"/>
+  <path class="draw d3" pathLength="1" d="M326 126 L342 122 L346 132 L330 135 Z"/>
+
+  <!-- lights -->
+  <path class="draw d4 lamp" pathLength="1" d="M76 176 C94 170 120 164 146 161 L140 172 C118 176 96 179 80 183 Z"/>
+  <path class="draw d4 lamp" pathLength="1" d="M732 155 L752 163 L750 176 L730 170 Z"/>
+
+  <!-- wheels -->
+  <g class="wheel">
+    <circle class="draw d5" pathLength="1" cx="190" cy="222" r="48"/>
+    <circle class="draw d5" pathLength="1" cx="190" cy="222" r="33" stroke-opacity=".7"/>
+    <path class="draw d6" pathLength="1" d="M190 189 L190 255 M157 222 L223 222 M167 199 L213 245 M213 199 L167 245" stroke-opacity=".45"/>
+    <circle cx="190" cy="222" r="6" class="hub"/>
+  </g>
+  <g class="wheel">
+    <circle class="draw d5" pathLength="1" cx="612" cy="222" r="48"/>
+    <circle class="draw d5" pathLength="1" cx="612" cy="222" r="33" stroke-opacity=".7"/>
+    <path class="draw d6" pathLength="1" d="M612 189 L612 255 M579 222 L645 222 M589 199 L635 245 M635 199 L589 245" stroke-opacity=".45"/>
+    <circle cx="612" cy="222" r="6" class="hub"/>
+  </g>
+
+  <!-- AI detection markers (beam guzarne par chamakte hain) -->
+  <g class="mark m-lamp">
+    <path d="M66 150 h10 M66 150 v10 M156 150 h-10 M156 150 v10 M66 190 h10 M66 190 v-10 M156 190 h-10 M156 190 v-10"/>
+    <text x="66" y="142">LAMP · OK</text>
+  </g>
+  <g class="mark m-wheel">
+    <path d="M136 168 h12 M136 168 v12 M244 168 h-12 M244 168 v12 M136 276 h12 M136 276 v-12 M244 276 h-12 M244 276 v-12"/>
+    <text x="136" y="292">TYRE · OK</text>
+  </g>
+  <g class="mark m-scratch alert">
+    <path d="M384 140 h12 M384 140 v12 M470 140 h-12 M470 140 v12 M384 204 h12 M384 204 v-12 M470 204 h-12 M470 204 v-12"/>
+    <path class="scratch-line" d="M398 186 C414 176 436 170 458 162"/>
+    <text x="384" y="132">SCRATCH · 92%</text>
+  </g>
+  <g class="mark m-glass">
+    <path d="M492 84 h12 M492 84 v12 M640 84 h-12 M640 84 v12 M492 136 h12 M492 136 v-12 M640 136 h-12 M640 136 v-12"/>
+    <text x="580" y="76">GLASS · OK</text>
+  </g>
+
+  <!-- scan beam -->
+  <g class="beam">
+    <rect x="-90" y="40" width="90" height="240" fill="url(#beamGrad)"/>
+    <rect x="-1.5" y="40" width="1.5" height="240" fill="#fff3d6"/>
+  </g>
+</svg>

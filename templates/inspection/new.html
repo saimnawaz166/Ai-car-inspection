@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}New inspection · AutoInspect AI{% endblock %}
+{% block content %}
+<p class="eyebrow">Inspection</p>
+<h1 class="page-title">New inspection</h1>
+<p class="lead">Sirf <strong>4 photos</strong> — gaadi aage, peeche, left aur right se, poori gaadi frame mein.
+  Pick-up aur return par <strong>same angle aur distance</strong> se lein. AI har photo mein shishe,
+  lights, tyre, bumper aur darwaze khud check karta hai.</p>
+
+<form method="post" enctype="multipart/form-data" id="inspection-form">
+  {% csrf_token %}
+
+  {% if zone_errors or form.errors %}
+    <div class="flash flash-error">
+      {% for e in zone_errors %}<div>{{ e }}</div>{% endfor %}
+      {% if form.errors %}<div>Vehicle details mein ghalti hai, neeche dekhein.</div>{% endif %}
+    </div>
+  {% endif %}
+
+  <section class="card">
+    <div class="card-head"><h2>Vehicle &amp; rental details</h2></div>
+    <div class="grid-form">
+      {% for field in form %}
+        <label class="field {% if field.name == 'notes' %}span-2{% endif %}">
+          <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
+          {{ field }}
+          {% for err in field.errors %}<small class="error">{{ err }}</small>{% endfor %}
+        </label>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Car photos</h2>
+      <span class="muted">4 sides · JPG / PNG / WEBP</span>
+    </div>
+    <div class="views">
+      {% for key, label, hint in views %}
+      <div class="zone view-card">
+        <div class="view-head">
+          {% include "inspection/_view_icon.html" %}
+          <div>
+            <h3>{{ label }}</h3>
+            <p class="zone-hint muted">{{ hint }}</p>
+          </div>
+        </div>
+        <div class="zone-pair">
+          <label class="drop">
+            <input type="file" name="before_{{ key }}" accept="image/*" data-preview>
+            <img alt="">
+            <span class="drop-text"><b>Before</b> rental<br><small>tap to add photo</small></span>
+          </label>
+          <label class="drop">
+            <input type="file" name="after_{{ key }}" accept="image/*" data-preview>
+            <img alt="">
+            <span class="drop-text"><b>After</b> rental<br><small>tap to add photo</small></span>
+          </label>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="actions">
+    <a class="btn btn-ghost" href="{% url 'inspection:home' %}">Cancel</a>
+    <button class="btn btn-primary" type="submit">Run AI inspection</button>
+  </div>
+</form>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-box">
+    <div class="spinner"></div>
+    <p><strong>Inspecting your vehicle…</strong></p>
+    <p class="muted">Aligning angles · normalising light · detecting damage</p>
+  </div>
+</div>
+{% endblock %}

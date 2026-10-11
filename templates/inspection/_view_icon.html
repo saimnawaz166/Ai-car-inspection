@@ -1,0 +1,37 @@
+<!-- Har view ka chhota line-art icon: staff ko dikhata hai photo kis taraf se leni hai -->
+{% if key == "front" or key == "back" %}
+<svg class="view-icon" viewBox="0 0 200 130" aria-hidden="true">
+  <path d="M28 98 L28 70 Q30 58 46 54 L62 28 Q66 20 76 20 L124 20 Q134 20 138 28 L154 54 Q170 58 172 70 L172 98 Z"/>
+  <path d="M28 86 L172 86" class="soft"/>
+  <rect x="36" y="98" width="22" height="16" rx="4"/>
+  <rect x="142" y="98" width="22" height="16" rx="4"/>
+  <path d="M60 54 L46 50 L46 58 Z" class="soft"/>
+  <path d="M140 54 L154 50 L154 58 Z" class="soft"/>
+  {% if key == "front" %}
+  <path d="M68 50 L78 30 L122 30 L132 50 Z"/>
+  <path d="M38 66 L66 63 L64 74 L40 76 Z" class="lamp"/>
+  <path d="M162 66 L134 63 L136 74 L160 76 Z" class="lamp"/>
+  <rect x="80" y="64" width="40" height="14" rx="3" class="soft"/>
+  {% else %}
+  <path d="M70 50 L80 32 L120 32 L130 50 Z"/>
+  <path d="M36 64 L70 64 L70 72 L38 74 Z" class="lamp"/>
+  <path d="M164 64 L130 64 L130 72 L162 74 Z" class="lamp"/>
+  <rect x="86" y="70" width="28" height="11" rx="2" class="soft"/>
+  {% endif %}
+</svg>
+{% else %}
+<svg class="view-icon" viewBox="40 56 740 230" aria-hidden="true">
+  <g{% if key == "right" %} transform="translate(820 0) scale(-1 1)"{% endif %}>
+    <path d="M70 222 L62 204 C58 186 70 172 94 166 L214 147 C262 141 292 132 324 118 C364 98 404 84 456 82 L548 84 C594 86 634 106 664 129 C694 141 724 147 742 153 C754 158 758 174 756 192 L750 220 L672 222 A60 60 0 0 0 552 222 L250 222 A60 60 0 0 0 130 222 Z"/>
+    <path d="M338 124 C372 103 408 93 452 91 L474 91 L480 130 L344 132 Z"/>
+    <path d="M492 91 L546 92 C582 94 612 109 636 128 L496 130 Z"/>
+    <path d="M342 134 C344 160 346 186 348 214 M486 132 C487 160 488 188 489 214" class="soft"/>
+    <path d="M76 176 C94 170 120 164 146 161 L140 172 C118 176 96 179 80 183 Z" class="lamp"/>
+    <path d="M732 155 L752 163 L750 176 L730 170 Z" class="lamp"/>
+    <circle cx="190" cy="222" r="46"/>
+    <circle cx="190" cy="222" r="30" class="soft"/>
+    <circle cx="612" cy="222" r="46"/>
+    <circle cx="612" cy="222" r="30" class="soft"/>
+  </g>
+</svg>
+{% endif %}

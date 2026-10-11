@@ -1,0 +1,17 @@
+# /etc/systemd/system/autoinspect.service
+# sudo systemctl daemon-reload && sudo systemctl enable --now autoinspect
+[Unit]
+Description=AutoInspect AI (Gunicorn)
+After=network.target postgresql.service
+
+[Service]
+User=autoinspect
+Group=www-data
+WorkingDirectory=/srv/autoinspect
+EnvironmentFile=/srv/autoinspect/.env
+ExecStart=/srv/autoinspect/venv/bin/gunicorn -c deploy/gunicorn.conf.py config.wsgi:application
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

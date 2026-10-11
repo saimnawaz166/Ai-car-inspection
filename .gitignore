@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+venv/
+db.sqlite3
+media/before/
+media/after/
+media/annotated/
+datasets/
+runs/
+ml_models/*.pt
+*.pt
+.env
+staticfiles/
+training_colab.zip

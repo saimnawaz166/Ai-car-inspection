@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Premium fleet inspection</p>
+    <h1>Every panel.<br>Every detail. <em>Documented.</em></h1>
+    <p class="lead">Photos at pick-up and at return. The AI aligns each pair, detects scratches,
+      dents, cracks, broken lamps, shattered glass and flat tyres, and prepares a signed-ready report.</p>
+    <a class="btn btn-primary" href="{% url 'inspection:new' %}">Begin inspection</a>
+    <div class="hero-stats">
+      <div><b>4</b><span>Photos per car</span></div>
+      <div><b>6</b><span>Damage types</span></div>
+      <div><b>PDF</b><span>Instant report</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <span class="scan-tag">AI scan · live</span>
+    {% include "inspection/_hero_car.html" %}
+  </div>
+</section>
+
+<ol class="steps">
+  <li><span>i.</span> 4 photos at pick-up: front, back, left, right</li>
+  <li><span>ii.</span> The same 4 photos at return</li>
+  <li><span>iii.</span> AI finds new damage and where it is</li>
+  <li><span>iv.</span> Download the inspection report</li>
+</ol>
+
+<section class="card">
+  <div class="card-head">
+    <h2>Recent inspections</h2>
+    <span class="muted">{{ inspections|length }} total</span>
+  </div>
+  {% if inspections %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr><th>Report</th><th>Vehicle</th><th>Customer</th><th>Photos</th><th>Result</th><th></th></tr>
+      </thead>
+      <tbody>
+      {% for i in inspections %}
+        <tr>
+          <td class="mono">{{ i.report_number }}</td>
+          <td><strong>{{ i.vehicle }}</strong><br><span class="muted">{{ i.plate_number }}</span></td>
+          <td>{{ i.customer_name }}</td>
+          <td>{{ i.zones.all|length }}</td>
+          <td><span class="badge status-{{ i.overall_status }}">{{ i.get_overall_status_display }}</span></td>
+          <td class="row-actions">
+            <a class="link" href="{% url 'inspection:report' i.pk %}">View report →</a>
+            <form method="post" action="{% url 'inspection:delete' i.pk %}"
+                  onsubmit="return confirm('{{ i.report_number }} ({{ i.vehicle|escapejs }}) delete karni hai? Photos bhi delete ho jayengi.');">
+              {% csrf_token %}
+              <button class="icon-btn" type="submit" title="Delete inspection" aria-label="Delete {{ i.report_number }}">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>
+              </button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty">
+      <p>Abhi koi inspection nahi hai.</p>
+      <p class="muted">Demo ke liye <code>sample_images/</code> folder ki photos use karein.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
